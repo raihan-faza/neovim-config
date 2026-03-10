@@ -1,49 +1,41 @@
 local lspconfig = require("lspconfig")
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local luasnip = require("luasnip")
+local navic = require("nvim-navic")
 
-lspconfig.pyright.setup({
-	capabilities = capabilities,
-})
+-- Shared LSP attach
+local lsp_on_attach = function(client, bufnr)
+	if client.server_capabilities.documentSymbolProvider then
+		navic.attach(client, bufnr)
+	end
+end
 
-lspconfig.gopls.setup({
-	capabilities = capabilities,
-})
+-- Simple servers
+local servers = {
+	"pyright",
+	"gopls",
+	"emmet_ls",
+	"biome",
+	"phpactor",
+	"clangd",
+	"lua_ls",
+	"css_variables",
+	"svelte",
+	"solidity_ls_nomicfoundation",
+	"tailwindcss",
+}
 
-lspconfig.emmet_ls.setup({
-	capabilities = capabilities,
-})
+for _, server in ipairs(servers) do
+	lspconfig[server].setup({
+		capabilities = capabilities,
+		on_attach = lsp_on_attach,
+	})
+end
 
-lspconfig.biome.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.phpactor.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.clangd.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.lua_ls.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.css_variables.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.svelte.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.solidity_ls_nomicfoundation.setup({
-	capabilities = capabilities,
-})
-
+-- Dart
 lspconfig.dartls.setup({
 	capabilities = capabilities,
+	on_attach = lsp_on_attach,
 	closingLabels = true,
 	flutterOutline = true,
 	onlyAnalyzeProjectsWithOpenFiles = true,
@@ -51,30 +43,37 @@ lspconfig.dartls.setup({
 	suggestFromUnimportedLibraries = true,
 })
 
+-- TypeScript / JavaScript
 lspconfig.ts_ls.setup({
+	capabilities = capabilities,
 	filetypes = {
 		"typescript",
 		"typescriptreact",
 		"javascript",
 		"javascriptreact",
 	},
-	on_attach = function(client)
+	on_attach = function(client, bufnr)
 		client.server_capabilities.documentFormattingProvider = false
+		lsp_on_attach(client, bufnr)
 	end,
 })
 
+-- ESLint
 lspconfig.eslint.setup({
+	capabilities = capabilities,
 	filetypes = {
 		"javascript",
 		"javascriptreact",
 		"typescript",
 		"typescriptreact",
 	},
+	on_attach = lsp_on_attach,
 })
 
-lspconfig.tailwindcss.setup({})
+-- ========================
+-- nvim-cmp setup
+-- ========================
 
--- import nvim-cmp plugin safely
 local cmp_status, cmp = pcall(require, "cmp")
 if not cmp_status then
 	return
@@ -85,17 +84,22 @@ vim.opt.completeopt = "menu,menuone,noselect"
 cmp.setup({
 	snippet = {
 		expand = function(args)
-			luasnip.lsp_expand(args.body) -- For `luasnip` users.
+			luasnip.lsp_expand(args.body)
 		end,
 	},
+
 	mapping = cmp.mapping.preset.insert({
-		["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
-		["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+		["<C-k>"] = cmp.mapping.select_prev_item(),
+		["<C-j>"] = cmp.mapping.select_next_item(),
+
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
-		["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
-		["<C-e>"] = cmp.mapping.abort(), -- close completion window
+
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<C-e>"] = cmp.mapping.abort(),
+
 		["<CR>"] = cmp.mapping.confirm({ select = false }),
+
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
@@ -112,12 +116,13 @@ cmp.setup({
 			end
 		end, { "i", "s" }),
 	}),
-	-- sources for autocompletion
+
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp" }, -- LSP
-		{ name = "buffer" }, -- text within the current buffer
-		{ name = "path" }, -- file system paths
+		{ name = "nvim_lsp" },
+		{ name = "buffer" },
+		{ name = "path" },
 		{ name = "luasnip" },
 	}),
 })
+
 require("luasnip.loaders.from_vscode").lazy_load()
