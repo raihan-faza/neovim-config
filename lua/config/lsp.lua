@@ -27,16 +27,53 @@ lspconfig.clangd.setup({
 })
 
 lspconfig.lua_ls.setup({
-	capabilities = capabilites,
+	capabilities = capabilities,
 })
 
 lspconfig.css_variables.setup({
 	capabilities = capabilities,
 })
 
-lspconfig.dartls.setup({
+lspconfig.svelte.setup({
 	capabilities = capabilities,
 })
+
+lspconfig.solidity_ls_nomicfoundation.setup({
+	capabilities = capabilities,
+})
+
+lspconfig.dartls.setup({
+	capabilities = capabilities,
+	closingLabels = true,
+	flutterOutline = true,
+	onlyAnalyzeProjectsWithOpenFiles = true,
+	outline = true,
+	suggestFromUnimportedLibraries = true,
+})
+
+lspconfig.ts_ls.setup({
+	filetypes = {
+		"typescript",
+		"typescriptreact",
+		"javascript",
+		"javascriptreact",
+	},
+	on_attach = function(client)
+		client.server_capabilities.documentFormattingProvider = false
+	end,
+})
+
+lspconfig.eslint.setup({
+	filetypes = {
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+	},
+})
+
+lspconfig.tailwindcss.setup({})
+
 -- import nvim-cmp plugin safely
 local cmp_status, cmp = pcall(require, "cmp")
 if not cmp_status then

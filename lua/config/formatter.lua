@@ -8,7 +8,11 @@ require("conform").setup({
 		-- You can customize some of the format options for the filetype (:help conform.format)
 		-- rust = { "rustfmt", lsp_format = "fallback" },
 		-- Conform will run the first available formatter
-		javascript = { "biome", stop_after_first = true },
+		-- javascript = { "biome", stop_after_first = true },
+		javascript = { "prettier" },
+		javascriptreact = { "prettier" },
+		typescript = { "prettier" },
+		typescriptreact = { "prettier" },
 		html = { "htmlbeautifier" },
 		go = { "goimports", "gofmt" },
 		php = { "php_cs_fixer" },

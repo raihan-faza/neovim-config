@@ -1,5 +1,5 @@
 -- Keybinding to toggle Neo-tree and focus on it
-vim.keymap.set("n", "<leader>b", function()
+vim.keymap.set("n", "<leader>[", function()
 	require("neo-tree.command").execute({ toggle = true, focus = true })
 end, { noremap = true, silent = true })
 
@@ -24,7 +24,7 @@ require("neo-tree").setup({
 		filtered_items = {
 			visible = true, -- Show hidden files
 		},
-		follow_current_file = true, -- Auto-focus on the file you're editing
+		follow_current_file = { enabled = true }, -- Auto-focus on the file you're editing
 	},
 	window = {
 		width = 30,
