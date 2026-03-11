@@ -1,4 +1,3 @@
-local lspconfig = require("lspconfig")
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local luasnip = require("luasnip")
 local navic = require("nvim-navic")
@@ -26,25 +25,31 @@ local servers = {
 }
 
 for _, server in ipairs(servers) do
-	lspconfig[server].setup({
+	vim.lsp.config(server, {
 		capabilities = capabilities,
 		on_attach = lsp_on_attach,
 	})
+	vim.lsp.enable(server)
 end
 
 -- Dart
-lspconfig.dartls.setup({
+vim.lsp.config("dartls", {
 	capabilities = capabilities,
 	on_attach = lsp_on_attach,
-	closingLabels = true,
-	flutterOutline = true,
-	onlyAnalyzeProjectsWithOpenFiles = true,
-	outline = true,
-	suggestFromUnimportedLibraries = true,
+	settings = {
+		dart = {
+			closingLabels = true,
+			flutterOutline = true,
+			onlyAnalyzeProjectsWithOpenFiles = true,
+			outline = true,
+			suggestFromUnimportedLibraries = true,
+		},
+	},
 })
+vim.lsp.enable("dartls")
 
 -- TypeScript / JavaScript
-lspconfig.ts_ls.setup({
+vim.lsp.config("ts_ls", {
 	capabilities = capabilities,
 	filetypes = {
 		"typescript",
@@ -57,9 +62,10 @@ lspconfig.ts_ls.setup({
 		lsp_on_attach(client, bufnr)
 	end,
 })
+vim.lsp.enable("ts_ls")
 
 -- ESLint
-lspconfig.eslint.setup({
+vim.lsp.config("eslint", {
 	capabilities = capabilities,
 	filetypes = {
 		"javascript",
@@ -69,6 +75,7 @@ lspconfig.eslint.setup({
 	},
 	on_attach = lsp_on_attach,
 })
+vim.lsp.enable("eslint")
 
 -- ========================
 -- nvim-cmp setup

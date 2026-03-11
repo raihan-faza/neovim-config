@@ -1,4 +1,13 @@
 require("gitsigns").setup({
+	current_line_blame = true,
+
+	current_line_blame_opts = {
+		delay = 300,
+	},
+
+	-- Blame text format
+	current_line_blame_formatter = "<author>, <author_time:%R> • <summary>",
+
 	on_attach = function(bufnr)
 		local gitsigns = require("gitsigns")
 
@@ -64,4 +73,11 @@ require("gitsigns").setup({
 		-- Text object
 		map({ "o", "x" }, "ih", gitsigns.select_hunk)
 	end,
+})
+
+-- Blame highlight (bright white / glowing style)
+vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", {
+	fg = "#ffffff",
+	bold = true,
+	italic = true,
 })
