@@ -78,6 +78,7 @@ require("gitsigns").setup({
 -- Blame highlight (bright white / glowing style)
 vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", {
 	fg = "#ffffff",
+	-- fg = "#000000",
 	bold = true,
 	italic = true,
 })

@@ -13,12 +13,13 @@ opt.guicursor = "n-v-i-c:thin-Cursor"
 opt.clipboard = "unnamedplus"
 opt.background = "dark" -- Set to "dark" or "light" based on your preference
 opt.colorcolumn = "120"
-cmd("colorscheme monochrome")
--- require("gruvbox").setup({
--- 	contrast = "soft", -- Optional, can be "soft", "medium", or "hard"
--- 	palette_overrides = {}, -- Optional, customize Gruvbox colors
--- 	overrides = {}, -- Optional, tweak highlight groups
--- })
+-- cmd("colorscheme monochrome")
+cmd("colorscheme gruvbox")
+require("gruvbox").setup({
+	contrast = "hard", -- Optional, can be "soft", "medium", or "hard"
+	palette_overrides = {}, -- Optional, customize Gruvbox colors
+	overrides = {}, -- Optional, tweak highlight groups
+})
 
 vim.wo.relativenumber = false
 -- vim.opt.laststatus = 0
